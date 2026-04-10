@@ -467,10 +467,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('seniority')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['Founder','Owner','C-Suite / Executive','Director','Partner','Vice President','Head','Manager','Senior','Entry Level','Trainee'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="seniority" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-seniority"></div>
           </div>
 
           <!-- Functional -->
@@ -482,10 +479,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('functional')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['C-Suite','Finanzas','Product Management','Ingeniería','Diseño','Educación','Recursos Humanos','Tecnología','Legal','Marketing','Operaciones','Ventas','Soporte'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="functional" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-functional"></div>
           </div>
         </div>
       </div>
@@ -505,10 +499,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('locationInclude')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia','Europe/EMEA','Latin America'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="locationInclude" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-locationInclude"></div>
           </div>
 
           <div style="margin-bottom:20px;">
@@ -524,10 +515,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('locationExclude')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="locationExclude" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-locationExclude"></div>
           </div>
 
           <div>
@@ -551,10 +539,7 @@
               <button type="button" class="ctrl-btn" onclick="clearAll('emailStatus')">Limpiar</button>
             </div>
           </div>
-          <div class="checkbox-grid" style="grid-template-columns: repeat(3, max-content); gap:10px;">
-            ${['Validado','No Validado','Desconocido'].map(v => `
-            <label class="checkbox-item"><input type="checkbox" name="emailStatus" value="${v}" />${v}</label>`).join('')}
-          </div>
+          <div class="checkbox-grid" id="grid-emailStatus" style="grid-template-columns: repeat(3, max-content); gap:10px;"></div>
         </div>
       </div>
 
@@ -580,10 +565,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('companySize')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['1-10','11-20','21-50','51-100','101-200','201-500','501-1000','1001-2000','2001-5000','5001-10000','10001-20000','20001-50000','50000+'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="companySize" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-companySize"></div>
           </div>
 
           <!-- Industries Include -->
@@ -596,10 +578,7 @@
               </div>
             </div>
             <input type="text" class="industry-search" placeholder="Buscar industria..." oninput="filterIndustries(this, 'industriesInclude')" />
-            <div class="checkbox-grid" id="grid-industriesInclude">
-              ${['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="industriesInclude" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-industriesInclude"></div>
           </div>
 
           <!-- Industries Exclude -->
@@ -612,10 +591,7 @@
               </div>
             </div>
             <input type="text" class="industry-search" placeholder="Buscar industria..." oninput="filterIndustries(this, 'industriesExclude')" />
-            <div class="checkbox-grid" id="grid-industriesExclude">
-              ${['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="industriesExclude" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-industriesExclude"></div>
           </div>
 
           <!-- Keywords -->
@@ -686,10 +662,7 @@
                 <button type="button" class="ctrl-btn" onclick="clearAll('funding')">Limpiar</button>
               </div>
             </div>
-            <div class="checkbox-grid">
-              ${['Seed Round','Angel Round','Series A','Series B','Series C','Series D','Series E','Series F','Venture Round','Debt Financing','Convertible Note','Private Equity Round','Other Round'].map(v => `
-              <label class="checkbox-item"><input type="checkbox" name="funding" value="${v}" />${v}</label>`).join('')}
-            </div>
+            <div class="checkbox-grid" id="grid-funding"></div>
           </div>
         </div>
       </div>
@@ -811,6 +784,58 @@ function selectAll(name) {
 }
 function clearAll(name) {
   document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = false);
+}
+
+// ========================================================
+// BUILD CHECKBOX GROUPS
+// ========================================================
+function buildCheckboxGroups() {
+  const groups = {
+    'grid-seniority': {
+      name: 'seniority',
+      values: ['Founder','Owner','C-Suite / Executive','VP','Director','Manager','Senior','Entry Level','Intern']
+    },
+    'grid-functional': {
+      name: 'functional',
+      values: ['C-Suite','Finanzas','Product Management','Ingeniería','Diseño','Educación','Recursos Humanos','Tecnología','Legal','Marketing','Operaciones','Ventas','Soporte']
+    },
+    'grid-locationInclude': {
+      name: 'locationInclude',
+      values: ['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia','Europe/EMEA','Latin America']
+    },
+    'grid-locationExclude': {
+      name: 'locationExclude',
+      values: ['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia']
+    },
+    'grid-emailStatus': {
+      name: 'emailStatus',
+      values: ['Validado','No Validado','Desconocido']
+    },
+    'grid-companySize': {
+      name: 'companySize',
+      values: ['1-10','11-20','21-50','51-100','101-200','201-500','501-1000','1001-2000','2001-5000','5001-10000','10001-20000','20001-50000','50000+']
+    },
+    'grid-industriesInclude': {
+      name: 'industriesInclude',
+      values: ['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games']
+    },
+    'grid-industriesExclude': {
+      name: 'industriesExclude',
+      values: ['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games']
+    },
+    'grid-funding': {
+      name: 'funding',
+      values: ['Seed Round','Angel Round','Series A','Series B','Series C','Series D','Series E','Series F','Venture Round','Debt Financing','Convertible Note','Private Equity Round','Other Round']
+    }
+  };
+
+  Object.entries(groups).forEach(function([gridId, cfg]) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    grid.innerHTML = cfg.values.map(function(v) {
+      return '<label class="checkbox-item"><input type="checkbox" name="' + cfg.name + '" value="' + v.replace(/"/g, '&quot;') + '" />' + v + '</label>';
+    }).join('');
+  });
 }
 
 // Industry search filter
@@ -1193,6 +1218,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
 // INIT ON LOAD
 // ========================================================
 window.addEventListener('load', () => {
+  buildCheckboxGroups();
   const saved = localStorage.getItem('g4c_leads');
   if (saved) {
     try {
