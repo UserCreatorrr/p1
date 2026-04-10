@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Growth4Clients — App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { background: #0F172A; color: #E2E8F0; display: flex; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    /* Sidebar */
+    #sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: #1E293B;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+
+    /* Main */
+    #main {
+      margin-left: 260px;
+      flex: 1;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Nav items */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: #94A3B8;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: #E2E8F0; }
+    .nav-item.active { background: rgba(250, 204, 21, 0.12); color: #FACC15; }
+    .nav-item.active svg { stroke: #FACC15; }
+
+    /* Glass card */
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+    }
+
+    /* Section accordion */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 12px 12px 0 0;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-weight: 600;
+      font-size: 15px;
+      color: #E2E8F0;
+      transition: background 0.15s;
+    }
+    .section-header:hover { background: rgba(30, 41, 59, 1); }
+    .section-content {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 20px;
+    }
+    .section-content.hidden { display: none; }
+    .chevron { transition: transform 0.25s ease; }
+
+    /* Form inputs */
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #E2E8F0;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus { border-color: #FACC15; }
+    .form-input::placeholder { color: #475569; }
+
+    select.form-input option { background: #1E293B; color: #E2E8F0; }
+
+    /* Checkbox grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 7px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: background 0.12s;
+      font-size: 13px;
+      color: #94A3B8;
+    }
+    .checkbox-item:hover { background: rgba(250,204,21,0.06); border-color: rgba(250,204,21,0.2); color: #E2E8F0; }
+    .checkbox-item input[type="checkbox"] { accent-color: #FACC15; width: 15px; height: 15px; cursor: pointer; }
+
+    /* Industry search input */
+    .industry-search {
+      width: 100%;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: #E2E8F0;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    .industry-search:focus { border-color: #FACC15; }
+    .industry-search::placeholder { color: #475569; }
+
+    /* Submit button */
+    .btn-submit {
+      background: #FACC15;
+      color: #1E293B;
+      font-weight: 700;
+      padding: 13px 32px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(250,204,21,0.25);
+    }
+    .btn-submit:hover { background: #EAB308; transform: translateY(-1px); box-shadow: 0 6px 28px rgba(250,204,21,0.35); }
+
+    /* Loading spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 56px; height: 56px;
+      border: 3px solid rgba(250,204,21,0.2);
+      border-top-color: #FACC15;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    /* Loading dots */
+    @keyframes dotPulse {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .dot { display: inline-block; width: 8px; height: 8px; background: #FACC15; border-radius: 50%; margin: 0 3px; }
+    .dot:nth-child(1) { animation: dotPulse 1.4s ease-in-out 0s infinite; }
+    .dot:nth-child(2) { animation: dotPulse 1.4s ease-in-out 0.2s infinite; }
+    .dot:nth-child(3) { animation: dotPulse 1.4s ease-in-out 0.4s infinite; }
+
+    /* Lead card */
+    .lead-card {
+      background: rgba(30,41,59,0.7);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .lead-card:hover { border-color: rgba(250,204,21,0.25); transform: translateY(-2px); }
+
+    /* Avatar */
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* Revenue badge */
+    .revenue-badge {
+      display: inline-block;
+      background: rgba(250,204,21,0.1);
+      border: 1px solid rgba(250,204,21,0.25);
+      color: #FACC15;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    /* Stat card */
+    .stat-card {
+      background: rgba(30,41,59,0.7);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FACC15, #F59E0B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Tooltip copy */
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #475569;
+      padding: 3px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .copy-btn:hover { color: #FACC15; }
+
+    /* Form label */
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94A3B8;
+      margin-bottom: 6px;
+    }
+
+    /* Select/Clear row */
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .ctrl-btn {
+      font-size: 12px;
+      font-weight: 500;
+      color: #FACC15;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 5px;
+      transition: background 0.12s;
+    }
+    .ctrl-btn:hover { background: rgba(250,204,21,0.1); }
+
+    /* Error banner */
+    #error-banner {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      color: #FCA5A5;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    /* Badge result count */
+    .result-badge {
+      background: #FACC15;
+      color: #1E293B;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+
+    /* Search input results */
+    .search-input {
+      background: rgba(30,41,59,0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 9px;
+      padding: 10px 16px;
+      color: #E2E8F0;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+      max-width: 360px;
+    }
+    .search-input:focus { border-color: #FACC15; }
+    .search-input::placeholder { color: #475569; }
+
+    /* Export btn */
+    .btn-export {
+      background: rgba(250,204,21,0.1);
+      border: 1px solid rgba(250,204,21,0.3);
+      color: #FACC15;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.15s;
+    }
+    .btn-export:hover { background: rgba(250,204,21,0.18); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #sidebar { transform: translateX(-100%); }
+      #main { margin-left: 0; }
+      .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1E293B;
+      border: 1px solid rgba(250,204,21,0.4);
+      color: #FACC15;
+      padding: 10px 18px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast">Copiado al portapapeles</div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <!-- Logo -->
+  <div style="padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img src="assets/logo.png" alt="Logo" style="width:36px; height:36px; object-fit:contain; border-radius:8px;" onerror="this.style.display='none'" />
+      <div>
+        <div style="font-weight:800; font-size:15px; color:#fff; letter-spacing:-0.3px;">Growth<span style="color:#FACC15;">4</span>Clients</div>
+        <div style="font-size:11px; color:#475569; font-weight:500;">Apollo Lead Scraper</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav style="padding: 12px 10px; flex:1;">
+    <div style="font-size:11px; font-weight:600; color:#334155; padding: 8px 8px 4px; letter-spacing:0.08em; text-transform:uppercase;">Menú</div>
+
+    <a class="nav-item active" id="nav-form" onclick="showView('form'); return false;" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      Nueva Búsqueda
+    </a>
+
+    <a class="nav-item" id="nav-results" onclick="showView('results'); return false;" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+      Resultados
+      <span class="result-badge" id="results-badge" style="display:none;">0</span>
+    </a>
+  </nav>
+
+  <!-- Version -->
+  <div style="padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+    <div style="font-size:12px; color:#334155; font-weight:500;">v1.0 · Beta</div>
+    <div style="font-size:11px; color:#1E3A5F; margin-top:2px;">Powered by n8n + Apify</div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="main" style="padding: 32px; min-height: 100vh;">
+
+  <!-- ============ VIEW: FORM ============ -->
+  <div id="view-form">
+    <!-- Page header -->
+    <div style="margin-bottom: 28px;">
+      <h1 style="font-size:24px; font-weight:800; color:#fff; margin:0 0 6px;">Nueva Búsqueda</h1>
+      <p style="font-size:14px; color:#64748B; margin:0;">Configura los filtros para extraer leads cualificados de Apollo via Apify.</p>
+    </div>
+
+    <div id="error-banner"></div>
+
+    <form id="apollo-form">
+
+      <!-- ========= SECTION 1: Configuración General ========= -->
+      <div style="margin-bottom: 12px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>⚙️ &nbsp;Configuración General</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div>
+              <label class="form-label">Número de leads</label>
+              <input type="number" id="leadsCount" class="form-input" value="100000" min="1" max="100000" />
+            </div>
+            <div>
+              <label class="form-label">Nombre del archivo / Label</label>
+              <input type="text" id="fileLabel" class="form-input" value="Prospects" placeholder="Prospects" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SECTION 2: Cargo y Seniority ========= -->
+      <div style="margin-bottom: 12px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>👤 &nbsp;Cargo y Seniority</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+            <div>
+              <label class="form-label">Títulos a INCLUIR</label>
+              <input type="text" id="jobTitlesInclude" class="form-input" placeholder="CEO, Founder, Director de Marketing" />
+            </div>
+            <div>
+              <label class="form-label">Títulos a EXCLUIR</label>
+              <input type="text" id="jobTitlesExclude" class="form-input" placeholder="Intern, Assistant" />
+            </div>
+          </div>
+
+          <!-- Seniority -->
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Nivel de Seniority</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('seniority')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('seniority')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['Founder','Owner','C-Suite / Executive','Director','Partner','Vice President','Head','Manager','Senior','Entry Level','Trainee'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="seniority" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <!-- Functional -->
+          <div>
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Nivel Funcional</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('functional')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('functional')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['C-Suite','Finanzas','Product Management','Ingeniería','Diseño','Educación','Recursos Humanos','Tecnología','Legal','Marketing','Operaciones','Ventas','Soporte'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="functional" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SECTION 3: Ubicación ========= -->
+      <div style="margin-bottom: 12px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>📍 &nbsp;Ubicación</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Países a INCLUIR</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('locationInclude')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('locationInclude')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia','Europe/EMEA','Latin America'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="locationInclude" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <label class="form-label">Ciudades a INCLUIR</label>
+            <input type="text" id="cityInclude" class="form-input" placeholder="Barcelona, Madrid, Valencia" />
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Países a EXCLUIR</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('locationExclude')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('locationExclude')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['Spain','United States','United Kingdom','Germany','France','Italy','Netherlands','Portugal','Mexico','Brazil','Argentina','Colombia','Chile','India','Canada','Australia'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="locationExclude" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label">Ciudades a EXCLUIR</label>
+            <input type="text" id="cityExclude" class="form-input" placeholder="Berlin, Munich" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SECTION 4: Estado del Email ========= -->
+      <div style="margin-bottom: 12px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>📧 &nbsp;Estado del Email</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+          <div class="ctrl-row">
+            <label class="form-label" style="margin:0;">Estado del Email</label>
+            <div>
+              <button type="button" class="ctrl-btn" onclick="selectAll('emailStatus')">Seleccionar todo</button>
+              <button type="button" class="ctrl-btn" onclick="clearAll('emailStatus')">Limpiar</button>
+            </div>
+          </div>
+          <div class="checkbox-grid" style="grid-template-columns: repeat(3, max-content); gap:10px;">
+            ${['Validado','No Validado','Desconocido'].map(v => `
+            <label class="checkbox-item"><input type="checkbox" name="emailStatus" value="${v}" />${v}</label>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SECTION 5: Empresa ========= -->
+      <div style="margin-bottom: 12px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>🏢 &nbsp;Empresa</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+
+          <div style="margin-bottom:20px;">
+            <label class="form-label">Dominios a INCLUIR</label>
+            <input type="text" id="companyDomain" class="form-input" placeholder="google.com, apple.com" />
+          </div>
+
+          <!-- Company size -->
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Tamaño de empresa</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('companySize')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('companySize')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['1-10','11-20','21-50','51-100','101-200','201-500','501-1000','1001-2000','2001-5000','5001-10000','10001-20000','20001-50000','50000+'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="companySize" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <!-- Industries Include -->
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Industrias a INCLUIR</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('industriesInclude')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('industriesInclude')">Limpiar</button>
+              </div>
+            </div>
+            <input type="text" class="industry-search" placeholder="Buscar industria..." oninput="filterIndustries(this, 'industriesInclude')" />
+            <div class="checkbox-grid" id="grid-industriesInclude">
+              ${['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="industriesInclude" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <!-- Industries Exclude -->
+          <div style="margin-bottom:20px;">
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Industrias a EXCLUIR</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('industriesExclude')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('industriesExclude')">Limpiar</button>
+              </div>
+            </div>
+            <input type="text" class="industry-search" placeholder="Buscar industria..." oninput="filterIndustries(this, 'industriesExclude')" />
+            <div class="checkbox-grid" id="grid-industriesExclude">
+              ${['Information Technology & Services','Construction','Marketing & Advertising','Real Estate','Health Wellness & Fitness','Management Consulting','Computer Software','Internet','Retail','Consumer Services','Hospital & Health Care','Financial Services','Automotive','Restaurants','Education Management','Food & Beverages','Design','Hospitality','Events Services','Accounting','Nonprofit Organization Management','Leisure Travel & Tourism','Professional Training & Coaching','Telecommunications','Insurance','Banking','Logistics & Supply Chain','Human Resources','Staffing & Recruiting','Legal Services','Law Practice','Media Production','Publishing','E-learning','Higher Education','Research','Biotechnology','Pharmaceuticals','Medical Devices','Medical Practice','Investment Management','Venture Capital & Private Equity','Investment Banking','Architecture & Planning','Civil Engineering','Mechanical or Industrial Engineering','Oil & Energy','Renewables & Environment','Consumer Goods','Luxury Goods & Jewelry','Apparel & Fashion','Cosmetics','Wholesale','Import & Export','Transportation/Trucking/Railroad','Aviation & Aerospace','Defense & Space','Government Administration','Security & Investigations','Computer & Network Security','Computer Hardware','Computer Networking','Semiconductors','Online Media','Broadcast Media','Entertainment','Music','Sports','Sporting Goods','Computer Games'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="industriesExclude" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+
+          <!-- Keywords -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div>
+              <label class="form-label">Keywords a INCLUIR</label>
+              <input type="text" id="keywordsInclude" class="form-input" placeholder="SaaS, B2B, ecommerce" />
+            </div>
+            <div>
+              <label class="form-label">Keywords a EXCLUIR</label>
+              <input type="text" id="keywordsExclude" class="form-input" placeholder="freelance, agency" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SECTION 6: Financiación ========= -->
+      <div style="margin-bottom: 24px;">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span>💰 &nbsp;Financiación</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <div class="section-content">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+            <div>
+              <label class="form-label">Facturación mínima</label>
+              <select id="revenueMin" class="form-input">
+                <option value="">Sin límite</option>
+                <option value="100K">100K</option>
+                <option value="500K">500K</option>
+                <option value="1M">1M</option>
+                <option value="5M">5M</option>
+                <option value="10M">10M</option>
+                <option value="25M">25M</option>
+                <option value="50M">50M</option>
+                <option value="100M">100M</option>
+                <option value="500M">500M</option>
+                <option value="1B">1B</option>
+                <option value="5B">5B</option>
+                <option value="10B">10B</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Facturación máxima</label>
+              <select id="revenueMax" class="form-input">
+                <option value="">Sin límite</option>
+                <option value="100K">100K</option>
+                <option value="500K">500K</option>
+                <option value="1M">1M</option>
+                <option value="5M">5M</option>
+                <option value="10M">10M</option>
+                <option value="25M">25M</option>
+                <option value="50M">50M</option>
+                <option value="100M">100M</option>
+                <option value="500M">500M</option>
+                <option value="1B">1B</option>
+                <option value="5B">5B</option>
+                <option value="10B">10B</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div class="ctrl-row">
+              <label class="form-label" style="margin:0;">Ronda de financiación</label>
+              <div>
+                <button type="button" class="ctrl-btn" onclick="selectAll('funding')">Seleccionar todo</button>
+                <button type="button" class="ctrl-btn" onclick="clearAll('funding')">Limpiar</button>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              ${['Seed Round','Angel Round','Series A','Series B','Series C','Series D','Series E','Series F','Venture Round','Debt Financing','Convertible Note','Private Equity Round','Other Round'].map(v => `
+              <label class="checkbox-item"><input type="checkbox" name="funding" value="${v}" />${v}</label>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="submit" class="btn-submit">
+          🚀 Iniciar Búsqueda
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ============ VIEW: LOADING ============ -->
+  <div id="view-loading" style="display:none;">
+    <div style="display:flex; align-items:center; justify-content:center; min-height:80vh;">
+      <div class="glass" style="padding:48px 56px; text-align:center; max-width:440px; width:100%;">
+        <div class="spinner"></div>
+        <h2 style="font-size:20px; font-weight:700; color:#fff; margin:0 0 10px;">Procesando búsqueda...</h2>
+        <p style="font-size:14px; color:#64748B; margin:0 0 24px; line-height:1.6;">El scraper de Apollo puede tardar varios minutos.<br/>No cierres esta ventana.</p>
+        <div style="margin-bottom:20px;">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div id="loading-msg" style="font-size:13px; color:#FACC15; font-weight:600; min-height:20px;">Conectando con n8n...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VIEW: RESULTS ============ -->
+  <div id="view-results" style="display:none;">
+    <!-- Page header -->
+    <div style="margin-bottom: 24px;">
+      <h1 style="font-size:24px; font-weight:800; color:#fff; margin:0 0 6px;">Resultados</h1>
+      <p style="font-size:14px; color:#64748B; margin:0;" id="results-subtitle">Leads extraídos y enriquecidos de Apollo.</p>
+    </div>
+
+    <!-- Stats cards -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;" id="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div style="font-size:13px; color:#64748B; margin-top:4px; font-weight:500;">Total Leads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-companies">0</div>
+        <div style="font-size:13px; color:#64748B; margin-top:4px; font-weight:500;">Empresas únicas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-countries">0</div>
+        <div style="font-size:13px; color:#64748B; margin-top:4px; font-weight:500;">Países</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-emails">0</div>
+        <div style="font-size:13px; color:#64748B; margin-top:4px; font-weight:500;">Emails verificados</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, empresa, email, cargo..." />
+      <button class="btn-export" onclick="exportCSV()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+        Exportar CSV
+      </button>
+    </div>
+
+    <!-- Lead cards grid -->
+    <div id="leads-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <div id="no-results" style="display:none; text-align:center; padding:60px 20px; color:#475569;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="margin:0 auto 16px; display:block; color:#334155;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div style="font-size:15px; font-weight:600;">No se encontraron resultados</div>
+      <div style="font-size:13px; margin-top:6px;">Intenta con otra búsqueda</div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ========================================================
+// NAVIGATION
+// ========================================================
+function showView(viewId) {
+  ['form','loading','results'].forEach(id => {
+    document.getElementById('view-' + id).style.display = id === viewId ? 'block' : 'none';
+  });
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navMap = { form: 'nav-form', results: 'nav-results' };
+  if (navMap[viewId]) document.getElementById(navMap[viewId]).classList.add('active');
+  // Scroll to top
+  document.getElementById('main').scrollTop = 0;
+}
+
+// ========================================================
+// ACCORDION
+// ========================================================
+function toggleSection(header) {
+  const content = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = content.style.display !== 'none' && !content.classList.contains('hidden');
+  content.style.display = isOpen ? 'none' : 'block';
+  chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// ========================================================
+// CHECKBOX HELPERS
+// ========================================================
+function selectAll(name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+    if (cb.closest('label') && cb.closest('label').style.display !== 'none') {
+      cb.checked = true;
+    }
+  });
+}
+function clearAll(name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = false);
+}
+
+// Industry search filter
+function filterIndustries(input, name) {
+  const q = input.value.toLowerCase();
+  const grid = document.getElementById('grid-' + name);
+  grid.querySelectorAll('label.checkbox-item').forEach(label => {
+    const text = label.textContent.toLowerCase();
+    label.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+// ========================================================
+// LOADING MESSAGES
+// ========================================================
+const loadingMessages = [
+  'Conectando con n8n...',
+  'Autenticando en Apify...',
+  'Ejecutando Apollo Scraper...',
+  'Buscando leads cualificados...',
+  'Extrayendo resultados...',
+  'Procesando datos...',
+];
+let msgIdx = 0;
+let msgInterval = null;
+
+function startLoadingMessages() {
+  msgIdx = 0;
+  document.getElementById('loading-msg').textContent = loadingMessages[0];
+  msgInterval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % loadingMessages.length;
+    document.getElementById('loading-msg').textContent = loadingMessages[msgIdx];
+  }, 3000);
+}
+function stopLoadingMessages() {
+  if (msgInterval) { clearInterval(msgInterval); msgInterval = null; }
+}
+
+// ========================================================
+// FORM DATA COLLECTION
+// ========================================================
+function collectFormData() {
+  const getChecked = (name) =>
+    [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
+
+  return {
+    leadsCount: parseInt(document.getElementById('leadsCount').value) || 100000,
+    fileLabel: document.getElementById('fileLabel').value || 'Prospects',
+    jobTitlesInclude: document.getElementById('jobTitlesInclude').value,
+    jobTitlesExclude: document.getElementById('jobTitlesExclude').value,
+    seniority: getChecked('seniority'),
+    functional: getChecked('functional'),
+    locationInclude: getChecked('locationInclude'),
+    cityInclude: document.getElementById('cityInclude').value,
+    locationExclude: getChecked('locationExclude'),
+    cityExclude: document.getElementById('cityExclude').value,
+    emailStatus: getChecked('emailStatus'),
+    companyDomain: document.getElementById('companyDomain').value,
+    companySize: getChecked('companySize'),
+    industriesInclude: getChecked('industriesInclude'),
+    industriesExclude: getChecked('industriesExclude'),
+    keywordsInclude: document.getElementById('keywordsInclude').value,
+    keywordsExclude: document.getElementById('keywordsExclude').value,
+    revenueMin: document.getElementById('revenueMin').value,
+    revenueMax: document.getElementById('revenueMax').value,
+    funding: getChecked('funding'),
+  };
+}
+
+// ========================================================
+// LEAD NORMALIZATION
+// ========================================================
+function normalizeLeads(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.leads)) return data.leads;
+  if (data && Array.isArray(data.results)) return data.results;
+  if (data && Array.isArray(data.data)) return data.data;
+  if (data && data.first_name) return [data];
+  return [];
+}
+
+// ========================================================
+// ERROR DISPLAY
+// ========================================================
+function showError(msg) {
+  const banner = document.getElementById('error-banner');
+  banner.textContent = '⚠️ ' + msg;
+  banner.style.display = 'block';
+  setTimeout(() => { banner.style.display = 'none'; }, 8000);
+}
+
+// ========================================================
+// FORM SUBMIT
+// ========================================================
+document.getElementById('apollo-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.getElementById('error-banner').style.display = 'none';
+  showView('loading');
+  startLoadingMessages();
+
+  const data = collectFormData();
+
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    stopLoadingMessages();
+    const json = await res.json();
+
+    if (!res.ok) throw new Error(json.error || 'Error del servidor');
+
+    const leads = normalizeLeads(json);
+
+    if (leads.length === 0) throw new Error('No se encontraron leads con los filtros seleccionados');
+
+    localStorage.setItem('g4c_leads', JSON.stringify(leads));
+    localStorage.setItem('g4c_search_ts', new Date().toISOString());
+
+    renderResults(leads);
+    showView('results');
+
+  } catch (err) {
+    stopLoadingMessages();
+    showView('form');
+    showError(err.message);
+  }
+});
+
+// ========================================================
+// AVATAR HELPERS
+// ========================================================
+function avatarColor(name) {
+  const colors = ['#6366F1','#10B981','#F43F5E','#F59E0B','#8B5CF6','#0EA5E9'];
+  let hash = 0;
+  for (const c of (name || 'X')) hash = c.charCodeAt(0) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function initials(name) {
+  if (!name) return '?';
+  return (name || '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+}
+
+// ========================================================
+// REVENUE PARSER
+// ========================================================
+function parseRevenue(val) {
+  if (!val) return 0;
+  const s = String(val).replace(/[$,\s]/g,'').toLowerCase();
+  if (s.includes('b')) return parseFloat(s) * 1e9;
+  if (s.includes('m')) return parseFloat(s) * 1e6;
+  if (s.includes('k')) return parseFloat(s) * 1e3;
+  return parseFloat(s) || 0;
+}
+
+function formatRevenue(val) {
+  const n = parseRevenue(val);
+  if (!n) return val || '—';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + (n/1e3).toFixed(0) + 'K';
+  return '$' + n.toFixed(0);
+}
+
+// ========================================================
+// RENDER RESULTS
+// ========================================================
+function renderResults(leads) {
+  // Stats
+  const companies = new Set(leads.map(l => l.company_name).filter(Boolean)).size;
+  const countries = new Set(leads.map(l => l.country).filter(Boolean)).size;
+  const emails = leads.filter(l => l.email && l.email_status !== 'No Validado' && l.email_status !== 'Desconocido').length;
+
+  document.getElementById('stat-total').textContent = leads.length.toLocaleString();
+  document.getElementById('stat-companies').textContent = companies.toLocaleString();
+  document.getElementById('stat-countries').textContent = countries.toLocaleString();
+  document.getElementById('stat-emails').textContent = emails.toLocaleString();
+
+  document.getElementById('results-subtitle').textContent =
+    `${leads.length.toLocaleString()} leads extraídos · ${companies.toLocaleString()} empresas · ${countries.toLocaleString()} países`;
+
+  updateResultsBadge(leads.length);
+  renderLeadCards(leads);
+}
+
+function renderLeadCards(leads) {
+  const grid = document.getElementById('leads-grid');
+  const noResults = document.getElementById('no-results');
+
+  if (!leads || leads.length === 0) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+
+  grid.innerHTML = leads.map(lead => {
+    const name = lead.full_name || [lead.first_name, lead.last_name].filter(Boolean).join(' ') || 'Sin nombre';
+    const email = lead.email || '';
+    const title = lead.title || lead.job_title || lead.headline || '';
+    const company = lead.organization_name || lead.company_name || lead.company || '';
+    const city = lead.city || '';
+    const country = lead.country || lead.location || '';
+    const location = [city, country].filter(Boolean).join(', ');
+    const industry = lead.industry || lead.organization_industry || '';
+    const employees = lead.organization_num_employees_ranges || lead.employees || lead.company_size || '';
+    const revenue = lead.organization_annual_revenue_printed || lead.company_annual_revenue_clean || lead.annual_revenue || '';
+    const founded = lead.organization_founded_year || lead.founded_year || '';
+    const linkedin = lead.linkedin_url || lead.linkedin || '';
+    const website = lead.organization_website_url || lead.website || lead.company_website || '';
+    const emailStatus = lead.email_status || lead.contact_email_status || '';
+
+    const color = avatarColor(name);
+    const abbr = initials(name);
+    const revNum = parseRevenue(revenue);
+    const revFmt = formatRevenue(revenue);
+    const isHighRevenue = revNum >= 1e6;
+
+    return `
+    <div class="lead-card">
+      <!-- Header -->
+      <div style="padding:16px 16px 12px; display:flex; gap:12px; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,0.05);">
+        <div class="avatar" style="background:${color};">${abbr}</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:14px; color:#F1F5F9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escHtml(name)}</div>
+          <div style="font-size:12px; color:#94A3B8; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escHtml(title)}">${escHtml(title) || '—'}</div>
+          <div style="font-size:12px; color:#64748B; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escHtml(company)}">${escHtml(company) || '—'}</div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.05);">
+        ${email ? `
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:7px;">
+          <span style="font-size:14px;">📧</span>
+          <span style="font-size:12px; color:#94A3B8; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escHtml(email)}">${escHtml(email)}</span>
+          ${emailStatus === 'Validado' || emailStatus === 'verified' ? '<span style="font-size:10px; background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.25); border-radius:4px; padding:1px 5px;">✓</span>' : ''}
+          <button class="copy-btn" onclick="copyToClipboard('${escAttr(email)}')" title="Copiar email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+          </button>
+        </div>` : ''}
+        ${linkedin ? `
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:7px;">
+          <span style="font-size:14px;">💼</span>
+          <span style="font-size:12px; color:#94A3B8; flex:1;">LinkedIn</span>
+          <a href="${escAttr(linkedin)}" target="_blank" rel="noopener noreferrer" style="color:#64748B; transition:color 0.15s;" onmouseover="this.style.color='#FACC15'" onmouseout="this.style.color='#64748B'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+        </div>` : ''}
+        ${website ? `
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:14px;">🌐</span>
+          <span style="font-size:12px; color:#94A3B8; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escHtml(website.replace(/^https?:\/\//,''))}</span>
+          <a href="${website.startsWith('http') ? escAttr(website) : 'https://' + escAttr(website)}" target="_blank" rel="noopener noreferrer" style="color:#64748B; transition:color 0.15s;" onmouseover="this.style.color='#FACC15'" onmouseout="this.style.color='#64748B'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+        </div>` : ''}
+      </div>
+
+      <!-- Meta -->
+      <div style="padding:12px 16px;">
+        ${location ? `<div style="font-size:12px; color:#64748B; margin-bottom:5px;">📍 ${escHtml(location)}</div>` : ''}
+        ${(industry || employees) ? `<div style="font-size:12px; color:#64748B; margin-bottom:5px;">🏢 ${[escHtml(industry), employees ? escHtml(String(employees)) + ' emp.' : ''].filter(Boolean).join(' · ')}</div>` : ''}
+        <div style="font-size:12px; color:#64748B; display:flex; align-items:center; gap:8px;">
+          ${revenue ? `<span>💵 ${isHighRevenue ? `<span class="revenue-badge">${escHtml(revFmt)}</span>` : escHtml(revFmt)}</span>` : ''}
+          ${founded ? `<span>· Est. ${escHtml(String(founded))}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ========================================================
+// UTILITIES
+// ========================================================
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(str) {
+  return String(str || '').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Copiado al portapapeles');
+  } catch {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copiado al portapapeles');
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+function updateResultsBadge(count) {
+  const badge = document.getElementById('results-badge');
+  if (count > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = count > 999 ? Math.floor(count/1000)+'K+' : count;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ========================================================
+// EXPORT CSV
+// ========================================================
+function exportCSV() {
+  const leads = JSON.parse(localStorage.getItem('g4c_leads') || '[]');
+  if (!leads.length) { showToast('No hay leads para exportar'); return; }
+
+  const headers = ['Nombre','Email','Título','Empresa','Ciudad','País','Industria','Revenue','LinkedIn','Website','Email Status'];
+  const rows = leads.map(l => {
+    const name = l.full_name || [l.first_name, l.last_name].filter(Boolean).join(' ') || '';
+    return [
+      name,
+      l.email || '',
+      l.title || l.job_title || '',
+      l.organization_name || l.company_name || l.company || '',
+      l.city || '',
+      l.country || l.location || '',
+      l.industry || l.organization_industry || '',
+      l.organization_annual_revenue_printed || l.company_annual_revenue_clean || l.annual_revenue || '',
+      l.linkedin_url || l.linkedin || '',
+      l.organization_website_url || l.website || l.company_website || '',
+      l.email_status || l.contact_email_status || '',
+    ];
+  });
+
+  const csvContent = [headers, ...rows]
+    .map(row => row.map(v => `"${String(v || '').replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+
+  const BOM = '\uFEFF'; // UTF-8 BOM for Excel
+  const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const ts = new Date().toISOString().slice(0,10);
+  a.download = `leads_${ts}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV exportado correctamente');
+}
+
+// ========================================================
+// SEARCH / FILTER
+// ========================================================
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  const all = JSON.parse(localStorage.getItem('g4c_leads') || '[]');
+  const filtered = q ? all.filter(l =>
+    (l.full_name || [l.first_name,l.last_name].filter(Boolean).join(' ') || '').toLowerCase().includes(q) ||
+    (l.organization_name || l.company_name || l.company || '').toLowerCase().includes(q) ||
+    (l.email || '').toLowerCase().includes(q) ||
+    (l.title || l.job_title || '').toLowerCase().includes(q) ||
+    (l.industry || l.organization_industry || '').toLowerCase().includes(q) ||
+    (l.country || l.location || '').toLowerCase().includes(q)
+  ) : all;
+  renderLeadCards(filtered);
+});
+
+// ========================================================
+// INIT ON LOAD
+// ========================================================
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('g4c_leads');
+  if (saved) {
+    try {
+      const leads = JSON.parse(saved);
+      if (leads.length > 0) {
+        renderResults(leads);
+        // Stay on form but show badge
+        updateResultsBadge(leads.length);
+      }
+    } catch { /* ignore corrupt data */ }
+  }
+});
+</script>
+</body>
+</html>
