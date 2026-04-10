@@ -3,6 +3,9 @@
   "functions": {
     "api/submit.js": {
       "maxDuration": 300
+    },
+    "app/api/submit/route.ts": {
+      "maxDuration": 300
     }
   }
 }

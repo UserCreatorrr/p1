@@ -1,0 +1,868 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0F172A;
+  color: #E2E8F0;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0F172A;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 15px) scale(0.97); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* ============================================================
+   LANDING PAGE — ORB BACKGROUNDS
+   ============================================================ */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.orb-yellow {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.18) 0%, transparent 70%);
+  top: -150px;
+  right: -150px;
+}
+
+.orb-grey {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(122, 139, 153, 0.15) 0%, transparent 70%);
+  bottom: -100px;
+  left: -100px;
+  animation-delay: -4s;
+}
+
+/* Grid overlay for landing */
+.grid-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(250, 204, 21, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250, 204, 21, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   FADE-UP ANIMATION HELPERS
+   ============================================================ */
+.fade-up {
+  animation: fadeInUp 0.7s ease forwards;
+  opacity: 0;
+}
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.8s; }
+.delay-8 { animation-delay: 1.0s; }
+.delay-9 { animation-delay: 1.2s; }
+
+/* ============================================================
+   GLASS
+   ============================================================ */
+.glass {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-app {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+}
+
+/* ============================================================
+   TEXT GRADIENT
+   ============================================================ */
+.text-gradient {
+  background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   PULSE DOT (landing badge)
+   ============================================================ */
+.pulse-dot {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   BUTTONS — LANDING
+   ============================================================ */
+.btn-primary {
+  background: #FACC15;
+  color: #1E293B;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 4px 24px rgba(250, 204, 21, 0.3);
+}
+.btn-primary:hover {
+  background: #EAB308;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(250, 204, 21, 0.4);
+}
+
+/* ============================================================
+   ICON WRAP (landing features)
+   ============================================================ */
+.icon-wrap {
+  width: 48px;
+  height: 48px;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   STAT NUMBER (landing)
+   ============================================================ */
+.stat-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FACC15, #F59E0B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: #1E293B;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #94A3B8;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #E2E8F0;
+}
+.nav-item.active {
+  background: rgba(250, 204, 21, 0.12);
+  color: #FACC15;
+}
+.nav-item.active svg {
+  stroke: #FACC15;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.main-content {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+/* ============================================================
+   ACCORDION SECTIONS
+   ============================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 12px 12px 0 0;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-weight: 600;
+  font-size: 15px;
+  color: #E2E8F0;
+  transition: background 0.15s;
+}
+.section-header:hover {
+  background: rgba(30, 41, 59, 1);
+}
+
+.section-content {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
+}
+
+.chevron {
+  transition: transform 0.25s ease;
+}
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.form-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #E2E8F0;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-input:focus {
+  border-color: #FACC15;
+}
+.form-input::placeholder {
+  color: #475569;
+}
+
+select.form-input option {
+  background: #1E293B;
+  color: #E2E8F0;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-bottom: 6px;
+}
+
+/* ============================================================
+   CHECKBOX GRID
+   ============================================================ */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 13px;
+  color: #94A3B8;
+}
+.checkbox-item:hover {
+  background: rgba(250, 204, 21, 0.06);
+  border-color: rgba(250, 204, 21, 0.2);
+  color: #E2E8F0;
+}
+.checkbox-item input[type='checkbox'] {
+  accent-color: #FACC15;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   INDUSTRY SEARCH
+   ============================================================ */
+.industry-search {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: #E2E8F0;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 10px;
+}
+.industry-search:focus {
+  border-color: #FACC15;
+}
+.industry-search::placeholder {
+  color: #475569;
+}
+
+/* ============================================================
+   CTRL ROW (select/clear)
+   ============================================================ */
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ctrl-btn {
+  font-size: 12px;
+  font-weight: 500;
+  color: #FACC15;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 5px;
+  transition: background 0.12s;
+}
+.ctrl-btn:hover {
+  background: rgba(250, 204, 21, 0.1);
+}
+
+/* ============================================================
+   SUBMIT BUTTON
+   ============================================================ */
+.btn-submit {
+  background: #FACC15;
+  color: #1E293B;
+  font-weight: 700;
+  padding: 13px 32px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(250, 204, 21, 0.25);
+}
+.btn-submit:hover {
+  background: #EAB308;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(250, 204, 21, 0.35);
+}
+
+/* ============================================================
+   ERROR BANNER
+   ============================================================ */
+.error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  color: #FCA5A5;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 3px solid rgba(250, 204, 21, 0.2);
+  border-top-color: #FACC15;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 24px;
+}
+
+/* Loading dots */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #FACC15;
+  border-radius: 50%;
+  margin: 0 3px;
+}
+.dot:nth-child(1) { animation: dotPulse 1.4s ease-in-out 0s infinite; }
+.dot:nth-child(2) { animation: dotPulse 1.4s ease-in-out 0.2s infinite; }
+.dot:nth-child(3) { animation: dotPulse 1.4s ease-in-out 0.4s infinite; }
+
+/* ============================================================
+   LEAD CARD
+   ============================================================ */
+.lead-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.lead-card:hover {
+  border-color: rgba(250, 204, 21, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   AVATAR
+   ============================================================ */
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   REVENUE BADGE
+   ============================================================ */
+.revenue-badge {
+  display: inline-block;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  color: #FACC15;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+/* ============================================================
+   STAT CARD (results)
+   ============================================================ */
+.stat-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FACC15, #F59E0B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   RESULT BADGE (sidebar)
+   ============================================================ */
+.result-badge {
+  background: #FACC15;
+  color: #1E293B;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 20px;
+  margin-left: 6px;
+}
+
+/* ============================================================
+   SEARCH INPUT (results filter)
+   ============================================================ */
+.search-input {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  padding: 10px 16px;
+  color: #E2E8F0;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  max-width: 360px;
+}
+.search-input:focus {
+  border-color: #FACC15;
+}
+.search-input::placeholder {
+  color: #475569;
+}
+
+/* ============================================================
+   EXPORT BUTTON
+   ============================================================ */
+.btn-export {
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  color: #FACC15;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.15s;
+}
+.btn-export:hover {
+  background: rgba(250, 204, 21, 0.18);
+}
+
+/* ============================================================
+   VIEW TOGGLE (cards / table)
+   ============================================================ */
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  padding: 3px;
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748B;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.view-btn.active {
+  background: rgba(250, 204, 21, 0.15);
+  color: #FACC15;
+}
+.view-btn:hover:not(.active) {
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================================
+   COPY BUTTON
+   ============================================================ */
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  padding: 3px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.copy-btn:hover {
+  color: #FACC15;
+}
+
+/* ============================================================
+   TABLE VIEW
+   ============================================================ */
+.leads-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.leads-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.leads-table th {
+  background: #1E293B;
+  color: #64748B;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 11px 16px;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.leads-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #1E293B;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.leads-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #CBD5E1;
+  vertical-align: middle;
+  white-space: nowrap;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.leads-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: #0F172A;
+  z-index: 1;
+  font-weight: 600;
+  color: #F1F5F9;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.leads-table tr {
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.leads-table tr:hover td {
+  background: rgba(250, 204, 21, 0.05) !important;
+}
+.leads-table tr:nth-child(even) td {
+  background: rgba(30, 41, 59, 0.35);
+}
+.leads-table tr:nth-child(even) td:first-child {
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.tbl-link {
+  color: #38BDF8;
+  text-decoration: none;
+}
+.tbl-link:hover {
+  color: #7DD3FC;
+}
+
+.tbl-null {
+  color: #334155;
+  font-style: italic;
+}
+
+/* ============================================================
+   LEAD DETAIL MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.modal-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 540px;
+  max-width: 100vw;
+  background: #0F172A;
+  border-left: 1px solid rgba(255, 255, 255, 0.09);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.25s ease;
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  background: #0F172A;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 2;
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  color: #64748B;
+  padding: 7px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.modal-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FACC15;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 16px 24px 8px;
+}
+
+.modal-field-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px;
+  padding: 8px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  align-items: baseline;
+}
+
+.modal-field-key {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-field-val {
+  font-size: 13px;
+  color: #CBD5E1;
+  word-break: break-word;
+}
+.modal-field-val a {
+  color: #38BDF8;
+  text-decoration: none;
+}
+.modal-field-val a:hover {
+  color: #7DD3FC;
+}
+
+.modal-null {
+  color: #334155;
+  font-style: italic;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1E293B;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  color: #FACC15;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
