@@ -340,6 +340,44 @@
       .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* View toggle (cards / table) */
+    .view-toggle { display:flex; gap:4px; background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:9px; padding:3px; }
+    .view-btn { background:none; border:none; cursor:pointer; color:#64748B; font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px; transition:all 0.15s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+    .view-btn.active { background:rgba(250,204,21,0.15); color:#FACC15; }
+    .view-btn:hover:not(.active) { color:#94A3B8; background:rgba(255,255,255,0.05); }
+
+    /* Lead card clickable */
+    .lead-card { cursor:pointer; }
+
+    /* Table view */
+    #leads-table-wrapper { overflow-x:auto; border-radius:12px; border:1px solid rgba(255,255,255,0.07); background:rgba(15,23,42,0.6); }
+    .leads-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .leads-table th { background:#1E293B; color:#64748B; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; padding:11px 16px; white-space:nowrap; border-bottom:1px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:2; }
+    .leads-table th:first-child { position:sticky; left:0; z-index:3; background:#1E293B; border-right:1px solid rgba(255,255,255,0.08); }
+    .leads-table td { padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.04); color:#CBD5E1; vertical-align:middle; white-space:nowrap; max-width:240px; overflow:hidden; text-overflow:ellipsis; }
+    .leads-table td:first-child { position:sticky; left:0; background:#0F172A; z-index:1; font-weight:600; color:#F1F5F9; border-right:1px solid rgba(255,255,255,0.07); }
+    .leads-table tr { transition:background 0.12s; cursor:pointer; }
+    .leads-table tr:hover td { background:rgba(250,204,21,0.05) !important; }
+    .leads-table tr:nth-child(even) td { background:rgba(30,41,59,0.35); }
+    .leads-table tr:nth-child(even) td:first-child { background:rgba(30,41,59,0.6); }
+    .tbl-link { color:#38BDF8; text-decoration:none; }
+    .tbl-link:hover { color:#7DD3FC; }
+    .tbl-null { color:#334155; font-style:italic; }
+
+    /* Lead detail modal */
+    #lead-modal { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); }
+    .modal-panel { position:absolute; right:0; top:0; bottom:0; width:540px; max-width:100vw; background:#0F172A; border-left:1px solid rgba(255,255,255,0.09); overflow-y:auto; display:flex; flex-direction:column; }
+    .modal-header { position:sticky; top:0; background:#0F172A; padding:20px 24px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; z-index:2; }
+    .modal-close { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); cursor:pointer; color:#64748B; padding:7px; border-radius:8px; display:flex; align-items:center; flex-shrink:0; transition:all 0.15s; }
+    .modal-close:hover { background:rgba(255,255,255,0.1); color:#fff; }
+    .modal-section-title { font-size:11px; font-weight:700; color:#FACC15; text-transform:uppercase; letter-spacing:0.08em; padding:16px 24px 8px; }
+    .modal-field-row { display:grid; grid-template-columns:160px 1fr; gap:12px; padding:8px 24px; border-bottom:1px solid rgba(255,255,255,0.04); align-items:baseline; }
+    .modal-field-key { font-size:11px; font-weight:600; color:#475569; text-transform:uppercase; letter-spacing:0.05em; }
+    .modal-field-val { font-size:13px; color:#CBD5E1; word-break:break-word; }
+    .modal-field-val a { color:#38BDF8; text-decoration:none; }
+    .modal-field-val a:hover { color:#7DD3FC; }
+    .modal-null { color:#334155; font-style:italic; }
+
     /* Toast */
     #toast {
       position: fixed;
@@ -725,10 +763,23 @@
     <!-- Controls -->
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
       <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, empresa, email, cargo..." />
-      <button class="btn-export" onclick="exportCSV()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-        Exportar CSV
-      </button>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <!-- View toggle -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-view-cards" onclick="switchResultsView('cards')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+            Cards
+          </button>
+          <button class="view-btn" id="btn-view-table" onclick="switchResultsView('table')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M10 3v18M6 3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6a3 3 0 013-3z" /></svg>
+            Tabla
+          </button>
+        </div>
+        <button class="btn-export" onclick="exportCSV()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          Exportar CSV
+        </button>
+      </div>
     </div>
 
     <!-- Lead cards grid -->
@@ -741,11 +792,41 @@
       <div style="font-size:15px; font-weight:600;">No se encontraron resultados</div>
       <div style="font-size:13px; margin-top:6px;">Intenta con otra búsqueda</div>
     </div>
+
+    <!-- TABLE VIEW -->
+    <div id="leads-table-wrapper" style="display:none;">
+      <table class="leads-table" id="leads-table">
+        <thead id="leads-table-head"></thead>
+        <tbody id="leads-table-body"></tbody>
+      </table>
+    </div>
   </div>
 
 </main>
 
+<!-- LEAD DETAIL MODAL -->
+<div id="lead-modal" onclick="if(event.target===this)closeLeadModal()">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div>
+        <div id="modal-name" style="font-weight:800; font-size:18px; color:#fff; margin-bottom:3px;"></div>
+        <div id="modal-subtitle" style="font-size:13px; color:#64748B;"></div>
+      </div>
+      <button class="modal-close" onclick="closeLeadModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="modal-body" style="padding-bottom:32px;"></div>
+  </div>
+</div>
+
 <script>
+// ========================================================
+// GLOBAL STATE
+// ========================================================
+let currentLeads = [];
+let currentResultsView = 'cards'; // 'cards' | 'table'
+
 // ========================================================
 // NAVIGATION
 // ========================================================
@@ -1007,6 +1088,8 @@ function formatRevenue(val) {
 // RENDER RESULTS
 // ========================================================
 function renderResults(leads) {
+  currentLeads = leads;
+
   // Stats
   const companies = new Set(leads.map(l => l.company_name).filter(Boolean)).size;
   const countries = new Set(leads.map(l => l.country).filter(Boolean)).size;
@@ -1022,6 +1105,33 @@ function renderResults(leads) {
 
   updateResultsBadge(leads.length);
   renderLeadCards(leads);
+  renderLeadTable(leads);
+}
+
+// ========================================================
+// VIEW SWITCH
+// ========================================================
+function switchResultsView(mode) {
+  currentResultsView = mode;
+  const cardsEl = document.getElementById('leads-grid');
+  const tableEl = document.getElementById('leads-table-wrapper');
+  const btnCards = document.getElementById('btn-view-cards');
+  const btnTable = document.getElementById('btn-view-table');
+  const noRes = document.getElementById('no-results');
+
+  if (mode === 'cards') {
+    cardsEl.style.display = 'grid';
+    tableEl.style.display = 'none';
+    btnCards.classList.add('active');
+    btnTable.classList.remove('active');
+    noRes.style.display = currentLeads.length === 0 ? 'block' : 'none';
+  } else {
+    cardsEl.style.display = 'none';
+    tableEl.style.display = currentLeads.length === 0 ? 'none' : 'block';
+    btnCards.classList.remove('active');
+    btnTable.classList.add('active');
+    noRes.style.display = currentLeads.length === 0 ? 'block' : 'none';
+  }
 }
 
 function renderLeadCards(leads) {
@@ -1035,7 +1145,7 @@ function renderLeadCards(leads) {
   }
   noResults.style.display = 'none';
 
-  grid.innerHTML = leads.map(lead => {
+  grid.innerHTML = leads.map((lead, idx) => {
     const name = lead.full_name || [lead.first_name, lead.last_name].filter(Boolean).join(' ') || 'Sin nombre';
     const email = lead.email || '';
     const title = lead.title || lead.job_title || lead.headline || '';
@@ -1058,7 +1168,7 @@ function renderLeadCards(leads) {
     const isHighRevenue = revNum >= 1e6;
 
     return `
-    <div class="lead-card">
+    <div class="lead-card" onclick="openLeadDetail(${idx})" title="Ver detalle completo">
       <!-- Header -->
       <div style="padding:16px 16px 12px; display:flex; gap:12px; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,0.05);">
         <div class="avatar" style="background:${color};">${abbr}</div>
@@ -1112,6 +1222,131 @@ function renderLeadCards(leads) {
 }
 
 // ========================================================
+// TABLE VIEW
+// ========================================================
+const TABLE_COLS = [
+  'first_name','last_name','email','mobile_number','personal_email',
+  'company_name','company_website','linkedin','full_name','job_title',
+  'industry','headline','seniority_level','company_linkedin','functional_level',
+  'company_size','city','state','country',
+  'company_annual_revenue','company_annual_revenue_clean',
+  'email_status','twitter','github','facebook','phone_numbers',
+  'organization_founded_year','keywords'
+];
+
+const COL_LABELS = {
+  first_name:'Nombre',last_name:'Apellido',email:'Email',mobile_number:'Móvil',
+  personal_email:'Email Personal',company_name:'Empresa',company_website:'Web Empresa',
+  linkedin:'LinkedIn',full_name:'Nombre Completo',job_title:'Cargo',industry:'Industria',
+  headline:'Headline',seniority_level:'Seniority',company_linkedin:'LinkedIn Empresa',
+  functional_level:'Nivel Funcional',company_size:'Empleados',city:'Ciudad',state:'Estado',
+  country:'País',company_annual_revenue:'Revenue',company_annual_revenue_clean:'Revenue (clean)',
+  email_status:'Email Status',twitter:'Twitter',github:'GitHub',facebook:'Facebook',
+  phone_numbers:'Teléfonos',organization_founded_year:'Fundada',keywords:'Keywords'
+};
+
+function renderLeadTable(leads) {
+  if (!leads || leads.length === 0) return;
+
+  // Build column list: priority cols first, then any extras found in data
+  const extraKeys = new Set();
+  leads.forEach(l => Object.keys(l).forEach(k => {
+    if (!TABLE_COLS.includes(k)) extraKeys.add(k);
+  }));
+  const allCols = [...TABLE_COLS, ...extraKeys].filter(k =>
+    leads.some(l => l[k] !== null && l[k] !== undefined && l[k] !== '' && l[k] !== 'null')
+  );
+
+  // Header
+  document.getElementById('leads-table-head').innerHTML =
+    '<tr>' + allCols.map(k =>
+      '<th>' + escHtml(COL_LABELS[k] || k) + '</th>'
+    ).join('') + '</tr>';
+
+  // Rows
+  document.getElementById('leads-table-body').innerHTML = leads.map((lead, idx) =>
+    '<tr onclick="openLeadDetail(' + idx + ')">' +
+    allCols.map(k => {
+      const v = lead[k];
+      if (v === null || v === undefined || v === '' || v === 'null') {
+        return '<td><span class="tbl-null">—</span></td>';
+      }
+      const s = String(v);
+      if ((k === 'linkedin' || k === 'company_linkedin' || k === 'company_website') && s.startsWith('http')) {
+        const display = s.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
+        return '<td><a class="tbl-link" href="' + escAttr(s) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + escHtml(display) + '</a></td>';
+      }
+      return '<td title="' + escAttr(s) + '">' + escHtml(s) + '</td>';
+    }).join('') +
+    '</tr>'
+  ).join('');
+}
+
+// ========================================================
+// LEAD DETAIL MODAL
+// ========================================================
+const MODAL_SECTIONS = [
+  { title: '👤 Contacto', keys: ['first_name','last_name','full_name','email','personal_email','mobile_number','phone_numbers','email_status'] },
+  { title: '💼 Cargo', keys: ['job_title','headline','seniority_level','functional_level'] },
+  { title: '🔗 Redes', keys: ['linkedin','twitter','github','facebook'] },
+  { title: '🏢 Empresa', keys: ['company_name','company_website','company_linkedin','industry','company_size','company_annual_revenue','company_annual_revenue_clean','organization_founded_year'] },
+  { title: '📍 Ubicación', keys: ['city','state','country'] },
+];
+
+function openLeadDetail(idx) {
+  const lead = currentLeads[idx];
+  if (!lead) return;
+
+  const name = lead.full_name || [lead.first_name, lead.last_name].filter(Boolean).join(' ') || 'Sin nombre';
+  document.getElementById('modal-name').textContent = name;
+  document.getElementById('modal-subtitle').textContent = [lead.job_title, lead.company_name].filter(Boolean).join(' · ') || '';
+
+  // Collect which keys are handled by sections
+  const handledKeys = new Set(MODAL_SECTIONS.flatMap(s => s.keys));
+
+  // Build "otros" section from remaining keys
+  const otherKeys = Object.keys(lead).filter(k => !handledKeys.has(k));
+
+  let html = '';
+  const allSections = [...MODAL_SECTIONS, { title: '📋 Otros campos', keys: otherKeys }];
+
+  allSections.forEach(section => {
+    const rows = section.keys
+      .filter(k => {
+        const v = lead[k];
+        return v !== null && v !== undefined && v !== '' && v !== 'null';
+      })
+      .map(k => {
+        const v = lead[k];
+        const s = String(v);
+        let valHtml;
+        if (s.startsWith('http')) {
+          valHtml = '<a href="' + escAttr(s) + '" target="_blank" rel="noopener">' + escHtml(s) + '</a>';
+        } else {
+          valHtml = escHtml(s);
+        }
+        const label = COL_LABELS[k] || k;
+        return '<div class="modal-field-row"><div class="modal-field-key">' + escHtml(label) + '</div><div class="modal-field-val">' + valHtml + '</div></div>';
+      });
+
+    if (rows.length === 0) return;
+    html += '<div class="modal-section-title">' + section.title + '</div>' + rows.join('');
+  });
+
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('lead-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLeadModal() {
+  document.getElementById('lead-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLeadModal(); });
+
+// ========================================================
 // UTILITIES
 // ========================================================
 function escHtml(str) {
@@ -1161,29 +1396,24 @@ function exportCSV() {
   const leads = JSON.parse(localStorage.getItem('g4c_leads') || '[]');
   if (!leads.length) { showToast('No hay leads para exportar'); return; }
 
-  const headers = ['Nombre','Email','Título','Empresa','Ciudad','País','Industria','Revenue','LinkedIn','Website','Email Status'];
-  const rows = leads.map(l => {
-    const name = l.full_name || [l.first_name, l.last_name].filter(Boolean).join(' ') || '';
-    return [
-      name,
-      l.email || '',
-      l.title || l.job_title || '',
-      l.organization_name || l.company_name || l.company || '',
-      l.city || '',
-      l.country || l.location || '',
-      l.industry || l.organization_industry || '',
-      l.organization_annual_revenue_printed || l.company_annual_revenue_clean || l.annual_revenue || '',
-      l.linkedin_url || l.linkedin || '',
-      l.organization_website_url || l.website || l.company_website || '',
-      l.email_status || l.contact_email_status || '',
-    ];
-  });
+  // Collect ALL keys across all leads
+  const keySet = new Set();
+  leads.forEach(l => Object.keys(l).forEach(k => keySet.add(k)));
+  const allKeys = [...keySet];
+
+  const headers = allKeys.map(k => COL_LABELS[k] || k);
+  const rows = leads.map(l =>
+    allKeys.map(k => {
+      const v = l[k];
+      return (v === null || v === undefined) ? '' : String(v);
+    })
+  );
 
   const csvContent = [headers, ...rows]
-    .map(row => row.map(v => `"${String(v || '').replace(/"/g,'""')}"`).join(','))
+    .map(row => row.map(v => '"' + v.replace(/"/g, '""') + '"').join(','))
     .join('\n');
 
-  const BOM = '\uFEFF'; // UTF-8 BOM for Excel
+  const BOM = '\uFEFF';
   const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1194,7 +1424,7 @@ function exportCSV() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('CSV exportado correctamente');
+  showToast('CSV exportado — ' + allKeys.length + ' columnas');
 }
 
 // ========================================================
@@ -1207,11 +1437,15 @@ document.getElementById('searchInput').addEventListener('input', function() {
     (l.full_name || [l.first_name,l.last_name].filter(Boolean).join(' ') || '').toLowerCase().includes(q) ||
     (l.organization_name || l.company_name || l.company || '').toLowerCase().includes(q) ||
     (l.email || '').toLowerCase().includes(q) ||
+    (l.personal_email || '').toLowerCase().includes(q) ||
     (l.title || l.job_title || '').toLowerCase().includes(q) ||
     (l.industry || l.organization_industry || '').toLowerCase().includes(q) ||
-    (l.country || l.location || '').toLowerCase().includes(q)
+    (l.country || l.location || '').toLowerCase().includes(q) ||
+    (l.headline || '').toLowerCase().includes(q)
   ) : all;
+  currentLeads = filtered;
   renderLeadCards(filtered);
+  renderLeadTable(filtered);
 });
 
 // ========================================================
